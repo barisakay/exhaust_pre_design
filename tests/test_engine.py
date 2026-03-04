@@ -12,14 +12,14 @@ Reference values are taken directly from the "Transmission loss.xlsx" spreadshee
     base_frequency   = 50 Hz   →  first-order freq = 300 Hz
 
 Spreadsheet cells used as expected values (read back with data_only=True):
-    D12 = 6.582862721   (1st order, 300 Hz)
-    E12 = 10.77542503   (2nd order, 600 Hz)
-    F12 = 12.15395971   (3rd order, 900 Hz)
-    G12 = 11.41677992   (4th order, 1200 Hz)
-    H12 = 8.204604539   (5th order, 1500 Hz)
-    I12 = 1.239805303   (6th order, 1800 Hz)
-    J12 = 4.54807425    (7th order, 2100 Hz)
-    K18 = 525.6715705   (speed of sound at 450 °C)
+    D12 = 12.099686442   (1st order, 300 Hz)
+    E12 = 3.276974614    (2nd order, 600 Hz)
+    F12 = 11.475846127   (3rd order, 900 Hz)
+    G12 = 7.142572303    (4th order, 1200 Hz)
+    H12 = 10.144356370   (5th order, 1500 Hz)
+    I12 = 9.670867055    (6th order, 1800 Hz)
+    J12 = 7.901375460    (7th order, 2100 Hz)
+    K18 = 525.6715705    (speed of sound at 450 °C)
 """
 
 from __future__ import annotations
@@ -74,13 +74,13 @@ def test_speed_of_sound_zero_celsius():
 
 # (frequency_hz, expected_tl_db) from spreadsheet cells D12–J12
 SPREADSHEET_CASES = [
-    (300.0, 6.582862721),
-    (600.0, 10.77542503),
-    (900.0, 12.15395971),
-    (1200.0, 11.41677992),
-    (1500.0, 8.204604539),
-    (1800.0, 1.239805303),
-    (2100.0, 4.54807425),
+    (300.0, 12.099686442),
+    (600.0, 3.276974614),
+    (900.0, 11.475846127),
+    (1200.0, 7.142572303),
+    (1500.0, 10.144356370),
+    (1800.0, 9.670867055),
+    (2100.0, 7.901375460),
 ]
 
 
@@ -93,7 +93,7 @@ def test_transmission_loss_vs_spreadsheet(freq, expected):
 
 
 def test_transmission_loss_zero_at_zero_sin():
-    """When sin(k*L*(180/pi)) == 0, TL should equal 0 dB."""
+    """When sin(k*L) == 0, TL should equal 0 dB."""
     # sin(0) == 0 → TL = 10*log10(1) = 0
     tl = transmission_loss(0.0, DEFAULT_PARAMS)
     assert abs(tl) < 1e-9
