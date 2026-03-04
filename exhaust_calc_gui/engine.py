@@ -8,12 +8,7 @@ Formulas (spreadsheet notation → Python):
     m   = d_exhaust / d_inlet                    diameter ratio [-]
     B   = 0.25 * (m - 1/m)^2                    expansion factor [-]
     k   = 2*pi*f / c                             wave number [rad/m]
-    TL  = 10 * log10(1 + B * sin(k*L*(180/pi))^2)   transmission loss [dB]
-
-The sin argument (k*L*(180/pi)) replicates the spreadsheet exactly;
-the factor 180/pi scales the radian wave-number product so the
-sin function sweeps multiple oscillation cycles over the frequency range
-of interest (this is the convention used in the source model).
+    TL  = 10 * log10(1 + B * sin(k*L)^2)            transmission loss [dB]
 """
 
 from __future__ import annotations
@@ -60,11 +55,7 @@ def transmission_loss(frequency: float, params: ExhaustParams) -> float:
     m = params.exhaust_diameter / params.inlet_diameter
     b = 0.25 * (m - 1.0 / m) ** 2
     k = 2.0 * math.pi * frequency / c
-    # Replicates spreadsheet formula: =SIN(k*L*(180/PI()))^2
-    # Excel's SIN takes radians; the (180/π) factor scales k*L so the function
-    # sweeps many oscillation cycles across the frequency range of interest.
-    # This matches the source model exactly and must NOT be simplified to sin(k*L).
-    sin2 = math.sin(k * params.exhaust_length * (180.0 / math.pi)) ** 2
+    sin2 = math.sin(k * params.exhaust_length) ** 2
     return 10.0 * math.log10(1.0 + b * sin2)
 
 
